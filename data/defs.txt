@@ -1,0 +1,126 @@
+smoketrail = ParticleDef {
+
+	resistance:0.1
+	gravity:0.1
+	drift:0.1
+
+
+	mesh:data/blob.obj
+}
+
+default_impact = Explode {
+	speed:0.1
+	dspeed:0.1
+	spin:0.05
+	num:2
+	lifetime:16
+	lifetime_rnd:32
+
+	particle_def:{
+		mesh: data/blob.obj
+		gravity:0.0025
+		drift: 0.05
+		ramp: smoke_ramp
+	}
+}
+bullet_impact = Explode {
+	speed:0.1
+	dspeed:0.1
+	spin:0.05
+	num:2
+	lifetime:16
+	lifetime_rnd:32
+	particle_def:{
+		mesh: data/blob.obj
+		gravity:0.0025
+		drift: 0.05
+		ramp: smoke_ramp
+	}
+}
+
+
+sub_machine_gun = GunDef {
+	sound:1
+	num_per_shot:1
+	muzzle:Dual()
+	cycletime:4
+	spinz:0.0
+	spinrnd:0.0
+	speed:1.5 
+	speed_rnd:0.0
+	extra_speed:0.0
+
+	elevation:0.05
+	launch_spread:0.01
+	dir_spread:0.04
+	rattle:0.05
+
+	projectile: Bullet()
+
+	lifetime:128
+
+	particle_def:{
+
+		mesh:data/plasmabolt.obj
+		drift:0.001
+		bounce:1.0
+		resistance:0.01
+		gravity:0.001
+		ramp:plasma_ramp
+	}
+
+}
+
+shot_gun = GunDef{
+	sound: 1
+	num_per_shot: 10
+	muzzle: Single()
+	lifetime: 64
+	cycletime: 24
+	spinz: 0.0
+	spinrnd: 0.0
+	speed: 0.5
+	speed_rnd: 0.0
+	extra_speed: 0.0
+	elevation: 0.05
+	launch_spread: 0.20
+	dir_spread: 0.01
+	rattle: 0.02
+	projectile:Bullet()
+
+	particle_def:{
+		drift: 0.01
+		mesh:data/plasmabolt.obj
+		resistance: 0.001
+		gravity:0.001
+		ramp: default_ramp
+	}
+}
+
+battle_rifle = GunDef {
+	sound: 1
+	num_per_shot: 1
+	muzzle: Dual()
+	lifetime: 128
+	cycletime: 8
+	spinz: 0.0
+	spinrnd: 0.0
+	speed: 3.0 
+	speed_rnd: 0.0
+	extra_speed: 0.0
+	elevation: 0.05
+	launch_spread: 0.01
+	dir_spread: 0.01
+	rattle: 0.05
+	projectile: Bullet()
+
+	particle_def:{
+		drift: 0.01
+		mesh:data/plasmabolt.obj
+		resistance: 0.001
+		ramp:plasma_ramp
+		gravity:0.0001
+	}
+	
+}
+
