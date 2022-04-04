@@ -4,9 +4,10 @@ smoketrail = ParticleDef {
 	gravity:0.1
 	drift:0.1
 
-
 	mesh:data/blob.obj
 }
+
+
 
 default_impact = Explode {
 	speed:0.1
@@ -16,26 +17,39 @@ default_impact = Explode {
 	lifetime:16
 	lifetime_rnd:32
 
-	particle_def:{
-		mesh: data/blob.obj
-		gravity:0.0025
-		drift: 0.05
-		ramp: smoke_ramp
-	}
+	particle_def:impact_particle
 }
+
+slow_smoke = Explode {
+	speed:0.025
+	dspeed:0.025
+	spin:0.05
+	num:1
+	lifetime:64
+	lifetime_rnd:128
+
+	particle_def:smoketrail
+}
+
+
+
+
+
+impact_particle = ParticleDef {
+	mesh: data/blob.obj
+	gravity:0.0025
+	drift: 0.01
+	ramp: smoke_ramp
+}
+
 bullet_impact = Explode {
 	speed:0.1
 	dspeed:0.1
 	spin:0.05
 	num:2
-	lifetime:16
-	lifetime_rnd:32
-	particle_def:{
-		mesh: data/blob.obj
-		gravity:0.0025
-		drift: 0.05
-		ramp: smoke_ramp
-	}
+	lifetime:32
+	lifetime_rnd:64
+	particle_def:impact_particle
 }
 
 
@@ -49,27 +63,32 @@ sub_machine_gun = GunDef {
 	speed:1.5 
 	speed_rnd:0.0
 	extra_speed:0.0
+	angle_rnd:[0.0 0.0 3.14]
 
 	elevation:0.05
 	launch_spread:0.01
 	dir_spread:0.04
-	rattle:0.05
+	rattle:0.1
 
 	projectile: Bullet()
 
 	lifetime:128
 
-	particle_def:{
-
-		mesh:data/plasmabolt.obj
-		drift:0.001
-		bounce:1.0
-		resistance:0.01
-		gravity:0.001
-		ramp:plasma_ramp
-	}
-
+	particle_def: smg_bullet
 }
+
+smg_bullet = ParticleDef {
+	mesh:data/plasmabolt.obj
+	drift:0.001
+	bounce:0.0
+	resistance:0.01
+	gravity:0.005
+	ramp:plasma_ramp
+	impact:[default_impact slow_smoke]
+	light_color:[0.0 1.0 1.0 0.0]
+	light_radius:6.0
+}
+
 
 shot_gun = GunDef{
 	sound: 1
@@ -88,14 +107,17 @@ shot_gun = GunDef{
 	rattle: 0.02
 	projectile:Bullet()
 
-	particle_def:{
-		drift: 0.01
-		mesh:data/plasmabolt.obj
-		resistance: 0.001
-		gravity:0.001
-		ramp: default_ramp
-	}
+	particle_def: shotgun_pellet
 }
+
+shotgun_pellet = ParticleDef {
+	drift: 0.01
+	mesh:data/plasmabolt.obj
+	resistance: 0.001
+	gravity:0.001
+	ramp: default_ramp
+}
+
 
 battle_rifle = GunDef {
 	sound: 1
@@ -113,14 +135,182 @@ battle_rifle = GunDef {
 	dir_spread: 0.01
 	rattle: 0.05
 	projectile: Bullet()
-
-	particle_def:{
-		drift: 0.01
-		mesh:data/plasmabolt.obj
-		resistance: 0.001
-		ramp:plasma_ramp
-		gravity:0.0001
-	}
-	
+	particle_def:rifle_bullet
 }
+
+rifle_bullet = ParticleDef {
+	drift: 0.01
+	mesh:data/plasmabolt.obj
+	resistance: 0.001
+	ramp:plasma_ramp
+	gravity:0.005
+}
+
+shrapnel_rocket_launcher = GunDef {
+	sound: 1
+	num_per_shot: 1
+	muzzle: Dual()
+	lifetime: 128
+	cycletime: 32
+	spinz: 0.01
+	spinrnd: 0.0
+	speed: 0.05
+	speed_rnd: 0.0
+	extra_speed: 0.0
+	angvel: [0.0 0.0 0.0]
+	elevation: 0.0
+	launch_spread: 0.01
+	dir_spread: 0.01
+	rattle: 0.05
+	projectile: Bullet()
+	particle_def:shrapnel_rocket
+}
+
+shrapnel_rocket = ParticleDef {
+	drift: 0.001
+	mesh:data/missile2.obj
+	resistance: 0.01
+	ramp:plasma_ramp
+	accel:[ 0.0 0.00 0.02 ]
+	light_radius:12.0
+	gravity:0.001
+	path:rocket_trail
+	impact: [rocket_trails_explode rocket_explode_fireball explode_light]
+}
+rocket_trail = Explode {
+	speed:0.005
+	dspeed:0.005
+	spin:0.05
+	vel:[0.0 0.0 -1.5]
+	num:1
+	lifetime:64
+	lifetime_rnd:128
+	frequency:1.0
+
+	particle_def:rocket_trail_particle
+}
+rocket_trail_particle = ParticleDef {
+
+	resistance:0.1
+	gravity:0.01
+	drift:0.02
+	ramp:rocket_trail_ramp
+	mesh:data/blob.obj
+}
+rocket_trail_ramp = Ramp {
+	color:[ [2.0 1.5 1.0 1.0]  [1.5 1.0 0.5 1.0] [0.5 0.5 0.5 0.0] ]
+	radius:[0.1 6.0 0.0]
+	mid:0.7
+}
+
+
+rocket_explode_fireball = Explode {
+	speed:0.3
+	dspeed:0.12
+	normal_vel:0.2
+	spin:0.05
+	num:8
+	lifetime:64
+	lifetime_rnd:0
+	radius:0.0
+
+	particle_def:rocket_fireball_particle
+}
+
+rocket_fireball_particle = ParticleDef {
+
+	resistance:0.04
+	gravity:-0.01
+	drift:0.02
+	ramp:rocket_fireball_ramp
+	mesh:data/blob.obj
+}
+
+rocket_fireball_ramp = Ramp {
+	color:[ [2.0 2.0 1.5 1.0]  [3.0 2.0 1.0 1.0] [1.0 0.5 0.5 0.0] ]
+	radius:[1.0 16.0 0.0]
+	mid:0.5
+}
+
+rocket_trails_explode = Explode {
+	speed:1.0
+	normal_vel:0.25
+	dspeed:0.2
+	spin:0.05
+	num:6
+	lifetime:32
+	lifetime_rnd:128
+	frequency:1.0
+	particle_def:explode_trail_head_particle
+}
+
+
+explode_light = Explode {
+	normal_vel:0.25
+	lifetime:96
+	particle_def:explode_light_pr
+}
+
+explode_light_pr = ParticleDef {
+	light_radius:64.0
+	ramp:explode_light_ramp
+	mesh:data/blob.obj
+}
+explode_light_ramp = Ramp {
+	color:[ [2.0 2.0 2.0 1.0]  [1.5 0.5 0.0 1.0] [0.0 0.0 0.0 0.0] ]
+	radius:[0.25 1.0 0.5]
+	mid:0.33
+}
+
+
+
+explode_trail_head_particle = ParticleDef {
+	resistance:0.04
+	gravity:0.002
+	drift:0.01
+	bounce:0.5
+	ramp:explode_trail_head_ramp
+	mesh:data/blob.obj
+	path:explode_trail_spawn
+}
+
+explode_trail_spawn = Explode {
+	speed:0.001
+	dspeed:0.001
+	spin:0.05
+	angle_rnd:[1.0 1.0 1.0]
+	num:1
+	lifetime:64
+	lifetime_rnd:32
+	frequency:0.5
+	particle_def:explode_trail_particle
+}
+
+explode_trail_particle = ParticleDef {
+	resistance:0.5
+	gravity:0.0
+	drift:0.01
+	ramp:explode_trail_ramp
+	mesh:data/blob.obj
+}
+explode_trail_ramp = Ramp {
+	color:[ [2.0 2.0 1.5 1.0]  [1.5 1.0 0.5 1.0] [0.5 0.5 0.5 0.0] ]
+	radius:[0.1 6.0 0.0]
+	mid:0.5
+}
+
+explode_trail_head_ramp = Ramp {
+	color:[ [2.0 2.0 1.5 1.0]  [1.5 1.0 0.5 1.0] [0.5 0.5 0.5 0.0] ]
+	radius:[0.1 0.1 0.0]
+	mid:0.5
+}
+
+enemy_grunt = CharacterDef{
+	mesh:data/spacemarine.iqm
+	armour:4
+
+	weapons:[sub_machine_gun]
+}
+
+
 
