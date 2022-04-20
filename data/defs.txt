@@ -8,6 +8,30 @@ smoketrail = ParticleDef {
 }
 
 
+impact_dummy = ParticleDef {
+	mesh:data/impact.obj
+}
+fireball_dummy = ParticleDef {
+	mesh:data/fireball.obj
+}
+twistyplasmasmall_dummy = ParticleDef {
+	mesh:data/twistplasmasmall.obj
+}
+gun_dummy = ParticleDef {
+	mesh:data/gun.obj
+}
+smallblob_dummy = ParticleDef {
+	mesh:data/smallblob.obj
+}
+grenade_dummy = ParticleDef {
+	mesh:data/grenade.obj
+}   
+bomblet_closed_dummy = ParticleDef {
+	mesh:data/bomblet_closed.obj
+}
+bomblet_dummy = ParticleDef {
+	mesh:data/bomblet.obj
+}
 
 default_impact = Explode {
 	speed:0.1
